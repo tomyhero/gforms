@@ -77,7 +77,13 @@ func (wg *selectWidget) html(f FieldInterface) string {
 	context.Multiple = wg.Multiple
 	opts := wg.Maker()
 	for i := 0; i < opts.Len(); i++ {
-		context.Options = append(context.Options, &selectOptionValue{Label: opts.Label(i), Value: opts.Value(i), Selected: opts.Selected(i), Disabled: opts.Disabled(i)})
+		/* support fillin  */
+		selected := false
+		if f.GetV().RawStr == opts.Value(i) {
+			selected = true
+		}
+		context.Options = append(context.Options, &selectOptionValue{Label: opts.Label(i), Value: opts.Value(i), Selected: selected, Disabled: opts.Disabled(i)})
+		//context.Options = append(context.Options, &selectOptionValue{Label: opts.Label(i), Value: opts.Value(i), Selected: opts.Selected(i), Disabled: opts.Disabled(i)})
 	}
 	context.Attrs = wg.Attrs
 	err := Template.ExecuteTemplate(&buffer, "SelectWidget", context)
