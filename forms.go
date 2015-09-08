@@ -19,6 +19,7 @@ type FormInstance struct {
 	Data           Data
 	CleanedData    CleanedData
 	ParseError     error
+	customErrors   []string // holding user custom errors
 }
 
 // Create a new form instance from `http.Request`.
@@ -124,6 +125,7 @@ func (f *FormInstance) Html() string {
 func DefineForm(fs *Fields) Form {
 	return func(r ...*http.Request) *FormInstance {
 		f := new(FormInstance)
+		f.customErrors = []string{}
 		f.fieldInstances = newFieldInterfaces(fs)
 		if len(r) > 0 {
 			f.ParseError = f.parseRequest(r[0])
@@ -201,5 +203,24 @@ func (fi *FormInstance) MapTo(model interface{}) {
 				}
 			}
 		}
+	}
+}
+
+func (self *FormInstance) SetCustomErrors(errs []string) {
+	self.customErrors = errs
+}
+
+func (self *FormInstance) CustomErrors() []string {
+	return self.customErrors
+}
+
+func (self *FormInstance) IsAllValid() bool {
+	if self.IsValid() == false {
+		return false
+	}
+	if len(self.customErrors) == 0 {
+		return true
+	} else {
+		return false
 	}
 }
