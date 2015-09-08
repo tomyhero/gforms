@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"reflect"
+	"regexp"
 	"strconv"
 	"unicode"
 	"unicode/utf16"
@@ -18,13 +19,16 @@ func bindRequest(req *http.Request) (*Data, error) {
 		return nil, errors.New("*http.Request is nil.")
 	}
 	contentType := req.Header.Get("Content-Type")
-	if req.Method == "POST" || req.Method == "PUT" || contentType != "" {
-		if contentType == "application/json" {
-			return bindJson(req)
-		} else {
-			return bindForm(req)
-		}
+
+	// I do not need this filter because my search form wont work well.
+	// ( I was doing this  r.Header.Set("Content-Type", r.Method) but i will fix here instead from now on.)
+	//if req.Method == "POST" || req.Method == "PUT" || contentType != "" {
+	if contentType == "application/json" {
+		return bindJson(req)
+	} else {
+		return bindForm(req)
 	}
+	//}
 	return nil, nil
 }
 
@@ -65,8 +69,19 @@ func bindJson(req *http.Request) (*Data, error) {
 	return &data, nil
 }
 
+var DEFAULT_MULTIPART_FORM_MEMORY_BYTE_SIZE int64 = 1024 * 1000 * 3
+
 func bindForm(req *http.Request) (*Data, error) {
-	req.ParseForm()
+
+	// Auto multipart Detected
+	contentType := req.Header.Get("Content-Type")
+	matched, _ := regexp.MatchString("^multipart/form-data;", contentType)
+	if matched {
+		req.ParseMultipartForm(DEFAULT_MULTIPART_FORM_MEMORY_BYTE_SIZE)
+	} else {
+		req.ParseForm()
+	}
+
 	data := Data{}
 	for name, v := range req.Form {
 		if len(v) != 0 {
