@@ -58,7 +58,7 @@ func (f *DateTimeFieldInstance) Clean(data Data) error {
 		f.V = m
 		v := m.rawValueAsString()
 		m.Kind = reflect.Struct
-		if v != nil {
+		if v != nil && *v != "" {
 			t, err := time.Parse(f.Format, *v)
 			if err != nil {
 				return errors.New(f.ErrorMessage)
