@@ -26,7 +26,7 @@ func Required(message ...string) required {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = "This field is required."
+		vl.Message = "この項目は必須です。"
 	}
 	return vl
 }
@@ -52,7 +52,7 @@ func MaxLengthValidator(length int, message ...string) maxLengthValidator {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = fmt.Sprintf("Ensure this value has at most %v characters.", vl.Length)
+		vl.Message = fmt.Sprintf("この項目は最大 %v 文字入力して下さい。", vl.Length)
 	}
 	return vl
 }
@@ -83,7 +83,7 @@ func MinLengthValidator(length int, message ...string) minLengthValidator {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = fmt.Sprintf("Ensure this value has at least %v characters", vl.Length)
+		vl.Message = fmt.Sprintf("この項目は最低 %v 文字以上入力して下さい。", vl.Length)
 	}
 	return vl
 }
@@ -113,7 +113,7 @@ func MaxValueValidator(value int, message ...string) maxValueValidator {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = fmt.Sprintf("Ensure this value is less than or equal to %v.", vl.Value)
+		vl.Message = fmt.Sprintf("この項目は %v 以下にして下さい。", vl.Value)
 	}
 	return vl
 }
@@ -142,7 +142,7 @@ func MinValueValidator(value int, message ...string) minValueValidator {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = fmt.Sprintf("Ensure this value is greater than or equal to %v.", vl.Value)
+		vl.Message = fmt.Sprintf("この項目は %v 以上にして下さい。", vl.Value)
 	}
 	return vl
 }
@@ -189,7 +189,7 @@ func RegexpValidator(regex string, message ...string) regexpValidator {
 	if len(message) > 0 {
 		vl.Message = message[0]
 	} else {
-		vl.Message = fmt.Sprintf("Enter a valid value.")
+		vl.Message = fmt.Sprintf("正しい値を入力して下さい。")
 	}
 	return vl
 }
@@ -200,7 +200,7 @@ func EmailValidator(message ...string) regexpValidator {
 	if len(message) > 0 {
 		return RegexpValidator(regex, message[0])
 	} else {
-		return RegexpValidator(regex, "Enter a valid email address.")
+		return RegexpValidator(regex, "正しいメールアドレスを入力して下さい。")
 	}
 }
 
@@ -210,6 +210,6 @@ func URLValidator(message ...string) regexpValidator {
 	if len(message) > 0 {
 		return RegexpValidator(regex, message[0])
 	} else {
-		return RegexpValidator(regex, "Enter a valid url.")
+		return RegexpValidator(regex, "正しいURLを入力して下さい。")
 	}
 }
