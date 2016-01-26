@@ -95,7 +95,7 @@ func (vl minLengthValidator) Validate(fi *FieldInstance, fo *FormInstance) error
 	}
 	s := v.Value.(string)
 	// multibyte support
-	if utf8.RuneCountInString(s) > vl.Length {
+	if utf8.RuneCountInString(s) < vl.Length {
 		return errors.New(vl.Message)
 	}
 	return nil
