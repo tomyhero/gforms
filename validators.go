@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"regexp"
+	"unicode/utf8"
 )
 
 type Validator interface {
@@ -62,7 +63,8 @@ func (vl maxLengthValidator) Validate(fi *FieldInstance, fo *FormInstance) error
 		return nil
 	}
 	s := v.Value.(string)
-	if len(s) > vl.Length {
+	// multibyte support
+	if utf8.RuneCountInString(s) > vl.Length {
 		return errors.New(vl.Message)
 	}
 	return nil
@@ -92,7 +94,8 @@ func (vl minLengthValidator) Validate(fi *FieldInstance, fo *FormInstance) error
 		return nil
 	}
 	s := v.Value.(string)
-	if len(s) < vl.Length {
+	// multibyte support
+	if utf8.RuneCountInString(s) > vl.Length {
 		return errors.New(vl.Message)
 	}
 	return nil
